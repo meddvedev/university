@@ -1,17 +1,9 @@
 version: '3.8'
 
-x-pg_settings: &pg_settings
-  POSTGRES_HOST: pg
-  POSTGRES_PORT: 5432
-  POSTGRES_USER: '{{ pg.user }}'
-  POSTGRES_PASSWORD: '{{ pg.password }}'
-  POSTGRES_DB: '{{ pg.database }}'
-
 services:
   api:
     restart: always
-    environment:
-      <<: *pg_settings
+    
   pg:
     restart: always
     image: postgres:15.1-alpine
