@@ -1,0 +1,54 @@
+version: '3.8'
+
+x-api_command: &api_command |
+  yarn install --network-timeout 100000
+  yarn start:dev
+x-web_command: &web_command |
+  yarn install --network-timeout 100000
+  yarn dev -p 80
+
+services:
+  api:
+    image: university_api_development
+    build:
+      context: ./api
+      dockerfile: Dockerfile.development
+    stdin_open: true
+    tty: true
+    command:
+      - 'sh'
+      - '-c'
+      - *api_command
+    environment:
+      # api
+      NODE_ENV: "${NODE_ENV:-development}"
+      WEB_URL: 'http://localhost:80'
+      # pg
+      <<: *pg_settings
+    depends_on:
+      - pg
+    volumes:
+      - ./api:/api
+      - api_node_modules:/api/node_modules
+    ports:
+      - '4000:4000'
+    networks:
+      - net
+  pg:
+    command:
+      - 'postgres'
+      - '-c'
+      - 'shared_preload_libraries=pg_stat_statements'
+      - '-c'
+      - 'pg_stat_statements.max=1000'
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      <<: *pg_settings
+    networks:
+      - net
+networks:
+  net:
+volumes:
+  api_node_modules:
+  web_node_modules:
+  pg_data:
