@@ -11,14 +11,14 @@ x-api_command: &api_command |
   yarn start:dev
 x-web_command: &web_command |
   yarn install --network-timeout 100000
-  yarn dev -p 80
+  yarn start
 
 volumes:
   pg_data:
 
 services:
   api:
-    image: university_api_development
+    image: university_api_dev
     build:
       context: ./api
       dockerfile: Dockerfile.development
@@ -39,6 +39,23 @@ services:
       - ./api:/api
     ports:
       - '4000:4000'
+    networks:
+      - net
+  web:
+    image: university_web_dev
+    build:
+      context: ./web
+      dockerfile: Dockerfile.development
+    command:
+      - 'sh'
+      - '-c'
+      - *web_command
+    environment:
+      NODE_ENV: "${NODE_ENV:-development}"
+    volumes:
+      - ./web:/web
+    ports:
+      - '80:80'
     networks:
       - net
   pg:
