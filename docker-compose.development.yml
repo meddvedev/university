@@ -1,11 +1,20 @@
 version: '3.8'
 
+x-pg_settings: &pg_settings
+  POSTGRES_HOST: pg
+  POSTGRES_PORT: 5432
+  POSTGRES_USER: "${POSTGRES_USER}"
+  POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+  POSTGRES_DB: "${POSTGRES_DB}"
 x-api_command: &api_command |
   yarn install --network-timeout 100000
   yarn start:dev
 x-web_command: &web_command |
   yarn install --network-timeout 100000
   yarn dev -p 80
+
+volumes:
+  pg_data:
 
 services:
   api:
@@ -22,14 +31,12 @@ services:
     environment:
       # api
       NODE_ENV: "${NODE_ENV:-development}"
-      WEB_URL: 'http://localhost:80'
       # pg
       <<: *pg_settings
     depends_on:
       - pg
     volumes:
       - ./api:/api
-      - api_node_modules:/api/node_modules
     ports:
       - '4000:4000'
     networks:
@@ -48,7 +55,3 @@ services:
       - net
 networks:
   net:
-volumes:
-  api_node_modules:
-  web_node_modules:
-  pg_data:
