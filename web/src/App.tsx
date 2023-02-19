@@ -1,4 +1,9 @@
+import { Auth } from "./components/Auth";
+
 export const App = () => {
-  console.log("render");
-  return <></>;
+  return (
+    <>
+      <Auth />
+    </>
+  );
 };

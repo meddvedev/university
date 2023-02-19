@@ -13,7 +13,10 @@ const theme = createTheme(
   {
     palette: {
       ...palettes.common,
-      ...palettes.light
+      ...palettes.light,
+      background: {
+        default: "#F5F7FA"
+      }
     }
   },
   {

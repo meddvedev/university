@@ -39,8 +39,6 @@ services:
       - ./api:/api
     ports:
       - '4000:4000'
-    networks:
-      - net
   web:
     image: university_web_dev
     build:
@@ -56,8 +54,6 @@ services:
       - ./web:/web
     ports:
       - '80:80'
-    networks:
-      - net
   pg:
     command:
       - 'postgres'
@@ -69,7 +65,3 @@ services:
       PGDATA: /var/lib/postgresql/data
       TZ: Europe/Moscow
       <<: *pg_settings
-    networks:
-      - net
-networks:
-  net:
